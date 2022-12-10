@@ -5,10 +5,10 @@ import (
 	"html/template"
 	"net/http"
 
-	"github.com/R-Media-Solutions/rmediasolutions-website//entities"
-	"github.com/R-Media-Solutions/rmediasolutions-website//libraries"
-	"github.com/R-Media-Solutions/rmediasolutions-website//models"
 	"github.com/R-Media-Solutions/rmediasolutions-website/config"
+	"github.com/R-Media-Solutions/rmediasolutions-website/entities"
+	"github.com/R-Media-Solutions/rmediasolutions-website/libraries"
+	"github.com/R-Media-Solutions/rmediasolutions-website/models"
 	"golang.org/x/crypto/bcrypt"
 )
 
@@ -33,7 +33,7 @@ func Index(w http.ResponseWriter, r *http.Request) {
 		} else {
 
 			data := map[string]interface{}{
-				"nama_lengkap": session.Values["nama_lengkap"],
+				"name": session.Values["name"],
 			}
 
 			temp, _ := template.ParseFiles("views/index.html")
@@ -98,7 +98,7 @@ func Login(w http.ResponseWriter, r *http.Request) {
 				session.Values["loggedIn"] = true
 				session.Values["email"] = user.Email
 				session.Values["username"] = user.Username
-				session.Values["nama_lengkap"] = user.NamaLengkap
+				session.Values["name"] = user.Name
 
 				session.Save(r, w)
 
@@ -133,11 +133,11 @@ func Register(w http.ResponseWriter, r *http.Request) {
 		r.ParseForm()
 
 		user := entities.User{
-			NamaLengkap: r.Form.Get("nama_lengkap"),
-			Email:       r.Form.Get("email"),
-			Username:    r.Form.Get("username"),
-			Password:    r.Form.Get("password"),
-			Cpassword:   r.Form.Get("cpassword"),
+			Name:      r.Form.Get("name"),
+			Email:     r.Form.Get("email"),
+			Username:  r.Form.Get("username"),
+			Password:  r.Form.Get("password"),
+			Cpassword: r.Form.Get("cpassword"),
 		}
 
 		errorMessages := validation.Struct(user)
