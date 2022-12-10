@@ -1,6 +1,6 @@
 package entities
 
-type User struct {
+type AdmUser struct {
 	Id        int64
 	Name      string `validate:"required" label:"Nama Lengkap"`
 	Email     string `validate:"required,email,isunique=users-email"`

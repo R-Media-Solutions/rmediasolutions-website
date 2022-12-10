@@ -9,6 +9,7 @@ require (
 )
 
 require (
+	github.com/go-playground/locales v0.14.0
 	github.com/gomodule/redigo v1.8.9 // indirect
 	github.com/gorilla/securecookie v1.1.1 // indirect
 )

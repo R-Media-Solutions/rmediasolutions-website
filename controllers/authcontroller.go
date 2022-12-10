@@ -17,7 +17,7 @@ type UserInput struct {
 	Password string `validate:"required"`
 }
 
-var userModel = models.NewUserModel()
+var AdmUserModel = models.NewAdmUserModel()
 var validation = libraries.NewValidation()
 
 func Index(w http.ResponseWriter, r *http.Request) {
@@ -69,15 +69,15 @@ func Login(w http.ResponseWriter, r *http.Request) {
 
 		} else {
 
-			var user entities.User
-			userModel.Where(&user, "username", UserInput.Username)
+			var admuser entities.AdmUser
+			AdmUserModel.Where(&admuser, "username", UserInput.Username)
 
 			var message error
-			if user.Username == "" {
+			if admuser.Username == "" {
 				message = errors.New("Username atau Password salah!")
 			} else {
 				// pengecekan password
-				errPassword := bcrypt.CompareHashAndPassword([]byte(user.Password), []byte(UserInput.Password))
+				errPassword := bcrypt.CompareHashAndPassword([]byte(admuser.Password), []byte(UserInput.Password))
 				if errPassword != nil {
 					message = errors.New("Username atau Password salah!")
 				}
@@ -96,9 +96,9 @@ func Login(w http.ResponseWriter, r *http.Request) {
 				session, _ := config.Store.Get(r, config.SESSION_ID)
 
 				session.Values["loggedIn"] = true
-				session.Values["email"] = user.Email
-				session.Values["username"] = user.Username
-				session.Values["name"] = user.Name
+				session.Values["email"] = admuser.Email
+				session.Values["username"] = admuser.Username
+				session.Values["name"] = admuser.Name
 
 				session.Save(r, w)
 
@@ -132,7 +132,7 @@ func Register(w http.ResponseWriter, r *http.Request) {
 		// mengambil inputan form
 		r.ParseForm()
 
-		user := entities.User{
+		user := entities.AdmUser{
 			Name:      r.Form.Get("name"),
 			Email:     r.Form.Get("email"),
 			Username:  r.Form.Get("username"),
@@ -158,7 +158,7 @@ func Register(w http.ResponseWriter, r *http.Request) {
 			user.Password = string(hashPassword)
 
 			// insert ke database
-			userModel.Create(user)
+			AdmUserModel.Create(user)
 
 			data := map[string]interface{}{
 				"pesan": "Registrasi berhasil",
