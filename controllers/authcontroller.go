@@ -2,7 +2,6 @@ package controllers
 
 import (
 	"errors"
-	"fmt"
 	"html/template"
 	"net/http"
 
@@ -71,9 +70,7 @@ func Login(w http.ResponseWriter, r *http.Request) {
 		} else {
 
 			var admuser entities.AdmUser
-			fmt.Println("TES ERROR")
 			AdmUserModel.Where(&admuser, "username", UserInput.Username)
-			fmt.Println("MASUK")
 
 			var message error
 			if admuser.Username == "" {
