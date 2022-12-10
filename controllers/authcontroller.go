@@ -132,7 +132,7 @@ func Register(w http.ResponseWriter, r *http.Request) {
 		// mengambil inputan form
 		r.ParseForm()
 
-		user := entities.AdmUser{
+		admuser := entities.AdmUser{
 			Name:      r.Form.Get("name"),
 			Email:     r.Form.Get("email"),
 			Username:  r.Form.Get("username"),
@@ -140,13 +140,13 @@ func Register(w http.ResponseWriter, r *http.Request) {
 			Cpassword: r.Form.Get("cpassword"),
 		}
 
-		errorMessages := validation.Struct(user)
+		errorMessages := validation.Struct(admuser)
 
 		if errorMessages != nil {
 
 			data := map[string]interface{}{
 				"validation": errorMessages,
-				"user":       user,
+				"user":       admuser,
 			}
 
 			temp, _ := template.ParseFiles("views/register.html")
@@ -154,11 +154,11 @@ func Register(w http.ResponseWriter, r *http.Request) {
 		} else {
 
 			// hashPassword
-			hashPassword, _ := bcrypt.GenerateFromPassword([]byte(user.Password), bcrypt.DefaultCost)
-			user.Password = string(hashPassword)
+			hashPassword, _ := bcrypt.GenerateFromPassword([]byte(admuser.Password), bcrypt.DefaultCost)
+			admuser.Password = string(hashPassword)
 
 			// insert ke database
-			AdmUserModel.Create(user)
+			AdmUserModel.Create(admuser)
 
 			data := map[string]interface{}{
 				"pesan": "Registrasi berhasil",
