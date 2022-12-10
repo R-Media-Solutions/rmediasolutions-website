@@ -2,8 +2,9 @@ package models
 
 import (
 	"database/sql"
-	"github.com/R-Media Solutions/rmediasolutions-website/config"
-	"github.com/R-Media Solutions/rmediasolutions-website/entities"
+
+	"github.com/R-Media-Solutions/rmediasolutions-website/config"
+	"github.com/R-Media-Solutions/rmediasolutions-website/entities"
 )
 
 type AdmUserModel struct {
@@ -42,7 +43,7 @@ func (u AdmUserModel) Where(admuser *entities.AdmUser, fieldName, fieldValue str
 func (u AdmUserModel) Create(admuser entities.AdmUser) (int64, error) {
 
 	result, err := u.db.Exec("INSERT INTO adm_users (name, email, username, password) values(?,?,?,?)",
-	admuser.NamaLengkap, admuser.Email, admuser.Username, admuser.Password)
+		admuser.Name, admuser.Email, admuser.Username, admuser.Password)
 
 	if err != nil {
 		return 0, err
