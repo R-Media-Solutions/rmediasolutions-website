@@ -2,6 +2,7 @@ package models
 
 import (
 	"database/sql"
+	"fmt"
 
 	"github.com/R-Media-Solutions/rmediasolutions-website/config"
 	"github.com/R-Media-Solutions/rmediasolutions-website/entities"
@@ -15,7 +16,15 @@ func NewAdmUserModel() *AdmUserModel {
 	conn, err := config.DBConn()
 
 	if err != nil {
-		panic(err)
+		fmt.Println("error validating sql.Open arguments")
+		panic(err.Error())
+	}
+	defer conn.Close()
+
+	err = conn.Ping()
+	if err != nil {
+		fmt.Println("error verifying connection with db.Ping")
+		panic(err.Error())
 	}
 
 	return &AdmUserModel{
