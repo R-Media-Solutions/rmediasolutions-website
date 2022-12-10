@@ -5,10 +5,10 @@ import (
 	"html/template"
 	"net/http"
 
-	"github.com/jeypc/go-auth/config"
-	"github.com/jeypc/go-auth/entities"
-	"github.com/jeypc/go-auth/libraries"
-	"github.com/jeypc/go-auth/models"
+	"github.com/R-Media-Solutions/rmediasolutions-website//entities"
+	"github.com/R-Media-Solutions/rmediasolutions-website//libraries"
+	"github.com/R-Media-Solutions/rmediasolutions-website//models"
+	"github.com/R-Media-Solutions/rmediasolutions-website/config"
 	"golang.org/x/crypto/bcrypt"
 )
 
