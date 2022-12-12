@@ -2,6 +2,7 @@ package controllers
 
 import (
 	"errors"
+	"fmt"
 	"html/template"
 	"net/http"
 
@@ -132,7 +133,7 @@ func Register(w http.ResponseWriter, r *http.Request) {
 		// mengambil inputan form
 		r.ParseForm()
 
-		admuser := entities.AdmUser{
+		registerInput := entities.AdmUser{
 			Name:      r.Form.Get("name"),
 			Email:     r.Form.Get("email"),
 			Username:  r.Form.Get("username"),
@@ -140,32 +141,35 @@ func Register(w http.ResponseWriter, r *http.Request) {
 			Cpassword: r.Form.Get("cpassword"),
 		}
 
-		errorMessages := validation.Struct(admuser)
+		//errorMessages := validation.Struct(registerInput)
 
-		if errorMessages != nil {
+		fmt.Println(registerInput)
+		/*
+			if errorMessages != nil {
 
-			data := map[string]interface{}{
-				"validation": errorMessages,
-				"user":       admuser,
+				data := map[string]interface{}{
+					"validation": errorMessages,
+					"user":       registerInput,
+				}
+
+				temp, _ := template.ParseFiles("views/register.html")
+				temp.Execute(w, data)
+			} else {
+
+				// hashPassword
+				hashPassword, _ := bcrypt.GenerateFromPassword([]byte(registerInput.Password), bcrypt.DefaultCost)
+				registerInput.Password = string(hashPassword)
+
+				// insert ke database
+				//AdmUserModel.Create(registerInput)
+
+				data := map[string]interface{}{
+					"pesan": "Registrasi berhasil",
+				}
+				temp, _ := template.ParseFiles("views/register.html")
+				temp.Execute(w, data)
 			}
-
-			temp, _ := template.ParseFiles("views/register.html")
-			temp.Execute(w, data)
-		} else {
-
-			// hashPassword
-			hashPassword, _ := bcrypt.GenerateFromPassword([]byte(admuser.Password), bcrypt.DefaultCost)
-			admuser.Password = string(hashPassword)
-
-			// insert ke database
-			AdmUserModel.Create(admuser)
-
-			data := map[string]interface{}{
-				"pesan": "Registrasi berhasil",
-			}
-			temp, _ := template.ParseFiles("views/register.html")
-			temp.Execute(w, data)
-		}
+		*/
 	}
 
 }
