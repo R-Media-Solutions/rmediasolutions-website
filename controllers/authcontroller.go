@@ -75,7 +75,8 @@ func Login(w http.ResponseWriter, r *http.Request) {
 
 			var message error
 			if admuser.Username == "" {
-				message = errors.New("Username atau Password salah!")
+				x := errors.New("Username atau Password salah!")
+				message = x
 			} else {
 				// pengecekan password
 				errPassword := bcrypt.CompareHashAndPassword([]byte(admuser.Password), []byte(UserInput.Password))
@@ -145,32 +146,30 @@ func Register(w http.ResponseWriter, r *http.Request) {
 
 		fmt.Println(registerInput)
 		fmt.Println(errorMessages)
-		/*
-			if errorMessages != nil {
+		if errorMessages != nil {
 
-				data := map[string]interface{}{
-					"validation": errorMessages,
-					"user":       registerInput,
-				}
-
-				temp, _ := template.ParseFiles("views/register.html")
-				temp.Execute(w, data)
-			} else {
-
-				// hashPassword
-				hashPassword, _ := bcrypt.GenerateFromPassword([]byte(registerInput.Password), bcrypt.DefaultCost)
-				registerInput.Password = string(hashPassword)
-
-				// insert ke database
-				//AdmUserModel.Create(registerInput)
-
-				data := map[string]interface{}{
-					"pesan": "Registrasi berhasil",
-				}
-				temp, _ := template.ParseFiles("views/register.html")
-				temp.Execute(w, data)
+			data := map[string]interface{}{
+				"validation": errorMessages,
+				"user":       registerInput,
 			}
-		*/
+
+			temp, _ := template.ParseFiles("views/register.html")
+			temp.Execute(w, data)
+		} else {
+
+			// hashPassword
+			hashPassword, _ := bcrypt.GenerateFromPassword([]byte(registerInput.Password), bcrypt.DefaultCost)
+			registerInput.Password = string(hashPassword)
+
+			// insert ke database
+			AdmUserModel.Create(registerInput)
+
+			data := map[string]interface{}{
+				"pesan": "Registrasi berhasil",
+			}
+			temp, _ := template.ParseFiles("views/register.html")
+			temp.Execute(w, data)
+		}
 	}
 
 }

@@ -23,10 +23,10 @@ func NewValidation() *Validation {
 	conn, err := config.DBConn()
 
 	if err != nil {
-		fmt.Println("error validating sql.Open arguments")
 		log.Fatal(err)
-		//panic(err.Error())
+		panic("Cannot connect to DB")
 	}
+	log.Println("Connected to Database!")
 
 	return &Validation{
 		db: conn,
@@ -35,6 +35,7 @@ func NewValidation() *Validation {
 
 func (v *Validation) Init() (*validator.Validate, ut.Translator) {
 	// memanggil package translator
+	fmt.Println("masuk validate")
 	translator := en.New()
 	uni := ut.New(translator, translator)
 
@@ -65,6 +66,7 @@ func (v *Validation) Init() (*validator.Validate, ut.Translator) {
 		tableName := split_params[0]
 		fieldName := split_params[1]
 		fieldValue := fl.Field().String()
+		fmt.Println(&split_params)
 
 		return v.checkIsUnique(tableName, fieldName, fieldValue)
 	})
