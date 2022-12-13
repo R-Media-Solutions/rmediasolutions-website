@@ -141,9 +141,10 @@ func Register(w http.ResponseWriter, r *http.Request) {
 			Cpassword: r.Form.Get("cpassword"),
 		}
 
-		//errorMessages := validation.Struct(registerInput)
+		errorMessages := validation.Struct(registerInput)
 
 		fmt.Println(registerInput)
+		fmt.Println(errorMessages)
 		/*
 			if errorMessages != nil {
 

@@ -2,7 +2,10 @@ package models
 
 import (
 	"database/sql"
-	"fmt"
+	"log"
+
+	"golang.org/x/crypto/bcrypt"
+	"gorm.io/gorm"
 
 	"github.com/R-Media-Solutions/rmediasolutions-website/config"
 	"github.com/R-Media-Solutions/rmediasolutions-website/entities"
@@ -16,15 +19,7 @@ func NewAdmUserModel() *AdmUserModel {
 	conn, err := config.DBConn()
 
 	if err != nil {
-		fmt.Println("error validating sql.Open arguments")
-		panic(err.Error())
-	}
-	defer conn.Close()
-
-	err = conn.Ping()
-	if err != nil {
-		fmt.Println("error verifying connection with db.Ping")
-		panic(err.Error())
+		log.Fatal(err)
 	}
 
 	return &AdmUserModel{
@@ -61,5 +56,29 @@ func (u AdmUserModel) Create(admuser entities.AdmUser) (int64, error) {
 	lastInsertId, _ := result.LastInsertId()
 
 	return lastInsertId, nil
+}
 
+type User struct {
+	gorm.Model
+	Name     string `json:"name"`
+	Username string `json:"username" gorm:"unique"`
+	Email    string `json:"email" gorm:"unique"`
+	Password string `json:"password"`
+}
+
+func (user *User) HashPassword(password string) error {
+	bytes, err := bcrypt.GenerateFromPassword([]byte(password), 14)
+	if err != nil {
+		return err
+	}
+	user.Password = string(bytes)
+	return nil
+}
+
+func (user *User) CheckPassword(providedPassword string) error {
+	err := bcrypt.CompareHashAndPassword([]byte(user.Password), []byte(providedPassword))
+	if err != nil {
+		return err
+	}
+	return nil
 }

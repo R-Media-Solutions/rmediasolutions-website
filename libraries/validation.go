@@ -2,6 +2,8 @@ package libraries
 
 import (
 	"database/sql"
+	"fmt"
+	"log"
 	"reflect"
 	"strings"
 
@@ -14,18 +16,20 @@ import (
 )
 
 type Validation struct {
-	conn *sql.DB
+	db *sql.DB
 }
 
 func NewValidation() *Validation {
 	conn, err := config.DBConn()
 
 	if err != nil {
-		panic(err)
+		fmt.Println("error validating sql.Open arguments")
+		log.Fatal(err)
+		//panic(err.Error())
 	}
 
 	return &Validation{
-		conn: conn,
+		db: conn,
 	}
 }
 
@@ -99,7 +103,7 @@ func (v *Validation) Struct(s interface{}) interface{} {
 
 func (v *Validation) checkIsUnique(tableName, fieldName, fieldValue string) bool {
 
-	row, _ := v.conn.Query("select "+fieldName+" from "+tableName+" where "+fieldName+" = ?", fieldValue)
+	row, _ := v.db.Query("select "+fieldName+" from "+tableName+" where "+fieldName+" = ?", fieldValue)
 
 	defer row.Close()
 
@@ -107,9 +111,6 @@ func (v *Validation) checkIsUnique(tableName, fieldName, fieldValue string) bool
 	for row.Next() {
 		row.Scan(&result)
 	}
-
-	// email@tentangkode
-	// email@tentangkode
 
 	return result != fieldValue
 }
